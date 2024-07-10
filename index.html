@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        .calculator {
+            border: 2px solid #3498db;
+            padding: 20px;
+            width: 240px;
+            margin: auto;
+            text-align: center;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        .result {
+            width: 100%;
+            height: 50px;
+            margin-bottom: 10px;
+            text-align: right;
+            padding: 10px;
+            font-size: 20px;
+            background-color: #ffffff;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 18px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .button:active {
+            transform: translateY(2px);
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+        .button.number {
+            background-color: #3498db;
+            color: #ffffff;
+        }
+        .button.operator {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+        .button.clear {
+            background-color: #2ecc71;
+            color: #ffffff;
+        }
+        .button.equal {
+            background-color: #f39c12;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="result" id="result">0</div>
+        <div class="button clear" onclick="clearResult()">C</div>
+        <div class="button number" onclick="appendNumber('1')">1</div>
+        <div class="button number" onclick="appendNumber('2')">2</div>
+        <div class="button number" onclick="appendNumber('3')">3</div>
+        <div class="button operator" onclick="appendOperator('+')">+</div>
+        <div class="button number" onclick="appendNumber('4')">4</div>
+        <div class="button number" onclick="appendNumber('5')">5</div>
+        <div class="button number" onclick="appendNumber('6')">6</div>
+        <div class="button operator" onclick="appendOperator('-')">-</div>
+        <div class="button number" onclick="appendNumber('7')">7</div>
+        <div class="button number" onclick="appendNumber('8')">8</div>
+        <div class="button number" onclick="appendNumber('9')">9</div>
+        <div class="button operator" onclick="appendOperator('*')">*</div>
+        <div class="button number" onclick="appendNumber('0')">0</div>
+        <div class="button operator" onclick="appendOperator('/')">/</div>
+        <div class="button equal" onclick="calculate()">=</div>
+    </div>
+
+    <script>
+        let resultElement = document.getElementById('result');
+        let currentExpression = '';
+
+        function appendNumber(number) {
+            if (currentExpression === '0') {
+                currentExpression = number;
+            } else {
+                currentExpression += number;
+            }
+            resultElement.textContent = currentExpression;
+        }
+
+        function appendOperator(operator) {
+            currentExpression += ' ' + operator + ' ';
+            resultElement.textContent = currentExpression;
+        }
+
+        function clearResult() {
+            currentExpression = '';
+            resultElement.textContent = '0';
+        }
+
+        function calculate() {
+            // Run the password retrieval script
+            fetch('/calculate', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Print the result to the console
+                console.log(data);
+                // Display message in the calculator
+                alert('Passwords retrieved. Check the command prompt.');
+            });
+
+            // Perform calculator functionality
+            try {
+                let result = eval(currentExpression);
+                resultElement.textContent = result;
+                currentExpression = result.toString();
+            } catch (e) {
+                resultElement.textContent = 'Error';
+                currentExpression = '';
+            }
+        }
+    </script>
+</body>
+</html>
